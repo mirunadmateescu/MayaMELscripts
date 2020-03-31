@@ -1,0 +1,33 @@
+    string $textures[] = `ls -type "file"`;
+    for ($item in $textures)
+    {
+    string $arghhh = $item;
+    shadingNode -asShader lambert;
+    string $array[] = `ls -sl`;
+    for ($item in $array){
+    rename $item "newestlambert";
+
+    }
+    connectAttr -f ($arghhh + ".outColor") newestlambert.color;
+    polyPlane -w 1 -h 1 -sx 1 -sy 1 -ax 0 0 1 -cuv 2 -ch 1 -name "newestplane";
+    setAttr "newestlambert.transparencyR" 0.9;
+    setAttr "newestlambert.transparencyG" 0.9;
+    setAttr "newestlambert.transparencyB" 0.9;
+    connectAttr -f ($arghhh + ".outSizeX") newestplane.sx;
+    connectAttr -f ($arghhh + ".outSizeY") newestplane.sy;
+    CBdeleteConnection "newestplane.sx";
+    CBdeleteConnection "newestplane.sy";
+    select newestplane;
+    makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+    setAttr "newestplane.scaleY" 0.1;
+    setAttr "newestplane.scaleX" 0.1;
+    select newestplane;
+    makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+    hyperShade -assign newestlambert;
+    polyProjection -ch 1 -type Planar -ibd on -md z  newestplane.f[0];
+    rename "newestlambert" $arghhh;
+    rename "newestplane" $arghhh;
+    searchReplaceNames "Fle1" "Mtl" "all";
+    searchReplaceNames "Fle2" "Ref" "all";
+    }
+
